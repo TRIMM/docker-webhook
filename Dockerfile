@@ -12,14 +12,8 @@ RUN curl -L --silent -o webhook.tar.gz https://github.com/adnanh/webhook/archive
     rm -rf /go
 
 FROM alpine:3.12
-ENV DOCKER_COMPOSE_VERSION 1.26.0
 COPY --from=build /usr/local/bin/webhook /usr/local/bin/webhook
-RUN apk --update add py-pip
-RUN apk --update add --virtual build-dependencies gcc python2-dev libffi-dev openssl-dev musl-dev make &&\
-    pip install -U docker-compose==${DOCKER_COMPOSE_VERSION} &&\
-    apk del build-dependencies &&\
-    rm -rf `find / -regex '.*\.py[co]' -or -name apk`
-
+RUN apk --update add docker-compose
 WORKDIR /etc/webhook
 VOLUME ["/etc/webhook"]
 EXPOSE 9000
